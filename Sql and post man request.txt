@@ -1,0 +1,204 @@
+http://localhost:8080/onetomany/getAllEmpDetails          -- Get Mapping 
+
+
+Response 
+
+[
+    {
+        "emp_id": 1,
+        "emp_name": "test1",
+        "goals": [
+            {
+                "goal_id": 11,
+                "goal_name": "Sample1123",
+                "emp_id": 1,
+                "goalComps": [
+                    {
+                        "goal_comp_id": 111,
+                        "goal_comp_name": "zxc1123123344",
+                        "goal_id": 11
+                    }
+                ]
+            },
+            {
+                "goal_id": 12,
+                "goal_name": "Sample2",
+                "emp_id": 1,
+                "goalComps": [
+                    {
+                        "goal_comp_id": 112,
+                        "goal_comp_name": "zxc2",
+                        "goal_id": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "emp_id": 2,
+        "emp_name": "test2",
+        "goals": [
+            {
+                "goal_id": 13,
+                "goal_name": "sample3",
+                "emp_id": 2,
+                "goalComps": [
+                    {
+                        "goal_comp_id": 113,
+                        "goal_comp_name": "zxc3",
+                        "goal_id": 13
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "emp_id": 3,
+        "emp_name": "test3",
+        "goals": []
+    },
+    {
+        "emp_id": 4,
+        "emp_name": "test4",
+        "goals": [
+            {
+                "goal_id": 14,
+                "goal_name": "sample4",
+                "emp_id": 4,
+                "goalComps": [
+                    {
+                        "goal_comp_id": 114,
+                        "goal_comp_name": "zxc4",
+                        "goal_id": 14
+                    }
+                ]
+            }
+        ]
+    }
+]
+
+
+
+http://localhost:8080/onetomany/saveGoalDetails      post mapping 
+
+Requst Body
+
+
+
+{
+                "goal_id": 11,
+                "goal_name": "Sample1123",
+                "emp_id": 1,
+                "goalComps": [
+                    {
+                        "goal_comp_id": 111,
+                        "goal_comp_name": "zxc1123",
+                        "goal_id": 11
+                    }
+                ]
+            }
+			
+			
+			
+			
+			
+http://localhost:8080/onetomany/saveGoalCompDetails		   post mapping 
+
+Requst Body
+
+   {
+            "goal_comp_id": 111,
+            "goal_comp_name": "zxc1123123344",
+            "goal_id": 11
+        }
+		
+		
+		
+		
+		
+		
+		
+		---------------------------------------------------------------
+		SQL Script
+		
+		-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.6.2-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             11.3.0.6295
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for test
+CREATE DATABASE IF NOT EXISTS `test` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+USE `test`;
+
+-- Dumping structure for table test.emp
+CREATE TABLE IF NOT EXISTS `emp` (
+  `emp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `emp_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`emp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table test.emp: ~4 rows (approximately)
+/*!40000 ALTER TABLE `emp` DISABLE KEYS */;
+INSERT INTO `emp` (`emp_id`, `emp_name`) VALUES
+	(1, 'test1'),
+	(2, 'test2'),
+	(3, 'test3'),
+	(4, 'test4');
+/*!40000 ALTER TABLE `emp` ENABLE KEYS */;
+
+-- Dumping structure for table test.goal
+CREATE TABLE IF NOT EXISTS `goal` (
+  `goal_id` int(11) NOT NULL,
+  `goal_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `emp_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`goal_id`),
+  KEY `FK__emp` (`emp_id`),
+  CONSTRAINT `FK__emp` FOREIGN KEY (`emp_id`) REFERENCES `emp` (`emp_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table test.goal: ~4 rows (approximately)
+/*!40000 ALTER TABLE `goal` DISABLE KEYS */;
+INSERT INTO `goal` (`goal_id`, `goal_name`, `emp_id`) VALUES
+	(11, 'Sample1123', 1),
+	(12, 'Sample2', 1),
+	(13, 'sample3', 2),
+	(14, 'sample4', 4);
+/*!40000 ALTER TABLE `goal` ENABLE KEYS */;
+
+-- Dumping structure for table test.golacomp
+CREATE TABLE IF NOT EXISTS `golacomp` (
+  `goal_comp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `goal_comp_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `goal_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`goal_comp_id`) USING BTREE,
+  KEY `FK_golacomp_goal` (`goal_id`),
+  CONSTRAINT `FK_golacomp_goal` FOREIGN KEY (`goal_id`) REFERENCES `goal` (`goal_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table test.golacomp: ~4 rows (approximately)
+/*!40000 ALTER TABLE `golacomp` DISABLE KEYS */;
+INSERT INTO `golacomp` (`goal_comp_id`, `goal_comp_name`, `goal_id`) VALUES
+	(111, 'zxc1123123344', 11),
+	(112, 'zxc2', 12),
+	(113, 'zxc3', 13),
+	(114, 'zxc4', 14);
+/*!40000 ALTER TABLE `golacomp` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+
+	
+
